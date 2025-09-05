@@ -1,0 +1,23 @@
+[project]
+name = "gh-search"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "thewisenerd", email = "thewisenerd@protonmail.com" }
+]
+requires-python = ">=3.13"
+dependencies = [
+    "click>=8.2.1",
+    "httplink>=0.2.0",
+    "httpx>=0.28.1",
+    "structlog>=25.4.0",
+    "xdg-base-dirs>=6.0.2",
+]
+
+[project.scripts]
+gh-search = "gh_search.gh_search:search"
+
+[build-system]
+requires = ["uv_build>=0.8.15,<0.9.0"]
+build-backend = "uv_build"

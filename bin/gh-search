@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+set -e
+
+source="${BASH_SOURCE:-$0}"
+project=$(cd -P "$(dirname "$source")/.." && pwd)
+
+exec uv run --project "$project" gh-search "$@"
