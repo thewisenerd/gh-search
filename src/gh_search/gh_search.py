@@ -68,16 +68,21 @@ def paginated(
             "per_page": per_page,
             "page": page,
         }
+        has_next = True
         if (data := cache.get(cache_key)) is None:
             r = search_impl(client, query, per_page, page)
             data = r.text
             cache.put(cache_key, data)
 
             link_header = r.headers.get("link", None)
-            links = httplink.parse_link_header(link_header)
-            if "next" not in links:
-                logger.debug("no next link, ending pagination", page=page)
-                break
+            if link_header is not None:
+                links = httplink.parse_link_header(link_header)
+                if "next" not in links:
+                    logger.debug("no next link, ending pagination", page=page)
+                    has_next = False
+            else:
+                logger.debug("no link header, ending pagination", page=page)
+                has_next = False
 
         response = json.loads(data)
 
@@ -96,6 +101,9 @@ def paginated(
             break
 
         yield from items
+
+        if not has_next:
+            break
 
 @dataclass(frozen=True)
 class FoundItem:
